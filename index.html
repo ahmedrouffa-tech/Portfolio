@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio – Ahmed</title>
+<meta name="description" content="Portfolio de projets de machine learning : régression et classification, applications Streamlit et code sur GitHub.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2f6f5; --surface:#ffffff; --ink:#0d2b3a; --muted:#51666f;
+  --line:#cfdcd9; --teal:#0b6e7a; --teal-d:#07525b; --sun:#f0b429; --todo:#fff3cd;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"Public Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{color-scheme:light}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 var(--sans)}
+a{color:var(--teal-d)}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.wrap{max-width:60rem;margin:0 auto;padding:0 1.25rem}
+#todo{background:var(--todo);border-bottom:2px solid var(--sun);padding:.75rem 0;font-size:.95rem}
+#todo[hidden]{display:none}
+header.hero{padding:4.5rem 0 3rem;border-bottom:1px solid var(--line)}
+h1{font:600 clamp(3rem,10vw,6rem)/.95 var(--serif);letter-spacing:-.02em;margin:0 0 1.25rem}
+.role{font:400 1.35rem/1.4 var(--serif);color:var(--teal-d);margin:0 0 1.25rem;max-width:34rem}
+.intro{max-width:40rem;margin:0 0 1.75rem;color:var(--ink)}
+.contacts{display:flex;flex-wrap:wrap;gap:.75rem}
+.btn{display:inline-block;padding:.6rem 1.1rem;border:2px solid var(--teal);border-radius:4px;background:var(--teal);color:#fff;text-decoration:none;font-weight:600;font-size:.95rem}
+.btn:hover{background:var(--teal-d);border-color:var(--teal-d)}
+.btn.ghost{background:transparent;color:var(--teal-d)}
+.btn.ghost:hover{background:var(--teal);color:#fff}
+.btn.off{background:transparent;border:2px dashed var(--muted);color:var(--muted);cursor:not-allowed}
+main{padding:3rem 0 4rem}
+h2{font:600 2rem/1.15 var(--serif);margin:0 0 .5rem}
+.lede{color:var(--muted);margin:0 0 2rem;max-width:38rem}
+.card{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--teal);border-radius:4px;padding:1.5rem 1.5rem 1.25rem;margin-bottom:1.5rem}
+.card header{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem 1rem;margin-bottom:1rem}
+.card h3{font:600 1.55rem/1.2 var(--serif);margin:0}
+.tag{font-size:.85rem;font-weight:600;color:var(--teal-d);border:1px solid var(--teal);border-radius:999px;padding:.1rem .7rem}
+dl{display:grid;grid-template-columns:9rem 1fr;gap:.6rem 1.25rem;margin:0 0 1.25rem}
+dt{font-weight:600;color:var(--muted)}
+dd{margin:0;max-width:40rem}
+.metrics{display:flex;flex-wrap:wrap;gap:.75rem;margin:0 0 1.25rem;padding:0;list-style:none}
+.metrics li{border:1px solid var(--line);border-top:3px solid var(--sun);border-radius:4px;padding:.5rem .9rem;min-width:7rem}
+.metrics b{display:block;font:600 1.6rem/1.1 var(--serif)}
+.metrics span{font-size:.85rem;color:var(--muted)}
+.note{font-size:.85rem;color:var(--muted);margin:-.75rem 0 1.25rem}
+.actions{display:flex;flex-wrap:wrap;gap:.75rem}
+.todo{background:var(--todo);border-radius:3px;padding:0 .35rem;color:#6b4e00}
+footer{border-top:1px solid var(--line);padding:1.5rem 0 2.5rem;color:var(--muted);font-size:.9rem}
+@media (max-width:36rem){dl{grid-template-columns:1fr;gap:.1rem}dt{margin-top:.6rem}header.hero{padding-top:3rem}}
+</style>
+</head>
+<body>
+
+<div id="todo" hidden><div class="wrap" id="todo-text"></div></div>
+
+<header class="hero">
+  <div class="wrap">
+    <h1 id="name"></h1>
+    <p class="role" id="role"></p>
+    <p class="intro" id="intro"></p>
+    <div class="contacts" id="contacts"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <h2>Mes modèles</h2>
+  <p class="lede" id="lede"></p>
+  <div id="models"></div>
+</main>
+
+<footer>
+  <div class="wrap" id="footer"></div>
+</footer>
+
+<script>
+/* ============================================================
+   À MODIFIER ICI UNIQUEMENT.
+   Chaque champ laissé vide ("") apparaît en jaune « à compléter »
+   sur la page, et un bandeau en haut le signale. Quand tout est
+   rempli, le bandeau disparaît tout seul.
+   ============================================================ */
+const CONFIG = {
+  name: "Ahmed",                          // ajoutez votre nom de famille si vous le souhaitez
+  role: "Épidémiologiste et responsable de mission SIM, en route vers le machine learning appliqué à la santé",
+  intro: "Je travaille à Djibouti dans le secteur hospitalier, avec plus de 14 ans d’expérience en santé : technicien de laboratoire, formation en épidémiologie de terrain (FETP/AFENET) et master d’épidémiologie en cours. Ce portfolio présente trois modèles de machine learning réalisés pendant ma formation AfriAI Solutions : chacun est déployé dans une application Streamlit et son code est public sur GitHub.",
+  linkedin: "",                           // ex. "https://www.linkedin.com/in/votre-profil"
+  github: "https://github.com/ahmedrouffa-tech",
+  email: "",                              // optionnel
+
+  models: [
+    {
+      title: "Student_Performance",
+      type: "Régression",
+      problem: "Estimer l’indice de performance d’un étudiant à partir de ses heures d’étude, de ses notes précédentes, de son sommeil, de ses activités extrascolaires et du nombre d’annales travaillées (10 000 élèves).",
+      algorithm: "Régression linéaire multiple, retenue face à Random Forest et XGBoost : erreur la plus basse, aucun surapprentissage et coefficients faciles à interpréter. Données nettoyées (valeurs aberrantes imputées par KNN, doublons retirés) puis normalisées.",
+      metrics: [
+        { label: "R²",   value: "0,988" },
+        { label: "MAE",  value: "1,62" },
+        { label: "RMSE", value: "2,07" }
+      ],
+      metricsNote: "Mesurées sur le jeu de test.",
+      streamlit: "https://ahmedrouffa-tech-student-performance-predictor-app-el0dct.streamlit.app/",
+      repo: "https://github.com/ahmedrouffa-tech/student-performance-predictor"
+    },
+    {
+      title: "Car_Data",
+      type: "Classification",
+      problem: "Classer un véhicule d’occasion en « Prix Standard » ou « Prix Élevé » (au-dessus ou en dessous de la médiane de 8,88 lakhs) à partir de son kilométrage, de son âge, de son prix neuf, de son carburant, de son type de vendeur et de sa transmission (5 861 véhicules).",
+      algorithm: "Gradient Boosting, optimisé par GridSearchCV et comparé à Random Forest et XGBoost. Il est retenu pour son écart plus faible entre entraînement et validation.",
+      metrics: [
+        { label: "Accuracy", value: "88,1 %" },
+        { label: "F1-score", value: "0,879" },
+        { label: "Recall",   value: "0,885" }
+      ],
+      metricsNote: "Mesurées sur le jeu de validation.",
+      streamlit: "",
+      repo: "https://github.com/ahmedrouffa-tech/Projet_Clas_Car_Data_Ahmed-2"
+    },
+    {
+      title: "Bank_Data",
+      type: "Classification",
+      problem: "Prédire si un client d’une banque portugaise souscrira un dépôt à terme après une campagne d’appels téléphoniques (11 640 clients).",
+      algorithm: "XGBoost, optimisé par GridSearchCV et comparé à Random Forest et Gradient Boosting : meilleure accuracy et meilleur AUC (0,886), sans le surapprentissage du Random Forest.",
+      metrics: [
+        { label: "Accuracy", value: "80,3 %" },
+        { label: "F1-score", value: "0,746" },
+        { label: "Recall",   value: "0,724" }
+      ],
+      metricsNote: "Mesurées sur le jeu de validation.",
+      streamlit: "",
+      repo: "https://github.com/ahmedrouffa-tech/Projet_Clas_Bank_Data_Ahmed-2-"
+    }
+  ],
+  footer: "Projet de fin de cours – AfriAI Solutions, 2026."
+};
+
+/* ===================== Affichage (ne pas modifier) ===================== */
+const missing = [];
+const $ = id => document.getElementById(id);
+
+function todo(text, label){
+  const s = document.createElement("span");
+  if (text){ s.textContent = text; } else { s.className = "todo"; s.textContent = "À compléter"; missing.push(label); }
+  return s;
+}
+function link(href, text, cls, label){
+  const a = document.createElement(href ? "a" : "span");
+  a.textContent = text;
+  a.className = "btn " + (cls || "");
+  if (href){ a.href = href; a.target = "_blank"; a.rel = "noopener noreferrer"; }
+  else { a.classList.add("off"); a.setAttribute("aria-disabled","true"); a.textContent = text + " (lien à ajouter)"; missing.push(label); }
+  return a;
+}
+
+$("name").textContent = CONFIG.name;
+$("role").textContent = CONFIG.role;
+$("intro").textContent = CONFIG.intro;
+$("lede").textContent = "Pour chaque modèle : le problème traité, l’algorithme retenu, ses principales métriques, puis l’application et le code.";
+
+const contacts = $("contacts");
+contacts.append(link(CONFIG.linkedin, "LinkedIn", "", "lien LinkedIn"));
+contacts.append(link(CONFIG.github, "GitHub", "ghost", "lien GitHub (profil)"));
+if (CONFIG.email){ const m = link("mailto:" + CONFIG.email, "E-mail", "ghost"); m.removeAttribute("target"); contacts.append(m); }
+
+CONFIG.models.forEach(m => {
+  const card = document.createElement("article");
+  card.className = "card";
+
+  const head = document.createElement("header");
+  const h3 = document.createElement("h3"); h3.textContent = m.title;
+  const tag = document.createElement("span"); tag.className = "tag"; tag.textContent = m.type;
+  head.append(h3, tag);
+
+  const dl = document.createElement("dl");
+  [["Problème", m.problem], ["Algorithme", m.algorithm]].forEach(([k, v]) => {
+    const dt = document.createElement("dt"); dt.textContent = k;
+    const dd = document.createElement("dd"); dd.append(todo(v, m.title + " : " + k.toLowerCase()));
+    dl.append(dt, dd);
+  });
+
+  const ul = document.createElement("ul"); ul.className = "metrics";
+  m.metrics.forEach(x => {
+    const li = document.createElement("li");
+    const b = document.createElement("b"); b.append(todo(x.value, m.title + " : " + x.label));
+    const s = document.createElement("span"); s.textContent = x.label;
+    li.append(b, s); ul.append(li);
+  });
+
+  if (m.metricsNote){ const n = document.createElement("p"); n.className = "note"; n.textContent = m.metricsNote; card.append(n); }
+
+  const actions = document.createElement("div"); actions.className = "actions";
+  actions.append(
+    link(m.streamlit, "Application Streamlit", "", m.title + " : lien Streamlit"),
+    link(m.repo, "Dépôt GitHub", "ghost", m.title + " : lien GitHub")
+  );
+
+  card.prepend(head); card.insertBefore(dl, card.children[1]); card.insertBefore(ul, card.children[2]); card.append(actions);
+  $("models").append(card);
+});
+
+$("footer").textContent = CONFIG.footer;
+
+if (missing.length){
+  $("todo-text").textContent = "Page non finalisée : " + missing.length + " élément(s) à compléter dans le bloc CONFIG du fichier index.html.";
+  $("todo").hidden = false;
+}
+</script>
+</body>
+</html>
